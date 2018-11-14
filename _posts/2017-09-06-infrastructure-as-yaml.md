@@ -3,7 +3,9 @@ layout: post
 title: Infrastructure as YAML
 ---
 
-> This post was originally hosted at the Wealthsimple [Engineering Blog](https://code.wealthsimple.com/) but was not migrated to [Wealthsimple @ Medium](https://medium.com/@Wealthsimple) for reasons unknown. It was [saved](http://web.archive.org/web/20171103222808/http://code.wealthsimple.com:80/infrastructure-as-yaml/) by our friends at the [Internet Archive](http://web.archive.org)
+> This post was originally hosted at the Wealthsimple [Engineering Blog](https://code.wealthsimple.com/), which is no more. It was [saved](http://web.archive.org/web/20171103222808/http://code.wealthsimple.com:80/infrastructure-as-yaml/) by our friends at the [Internet Archive](http://web.archive.org). 
+
+[//]: # I was fortunate to get help from a former colleague on the formatting of this recreation
 
 At Wealthsimple, our goal is to have scalable, secure, and stable infrastructure, while also allowing developers to quickly and easily deploy new code. We want to provide a great customer experience with an always-up system, while still giving access to great features as rapidly as we can add them. This will be the first in a series of posts about the technologies we use to manage our platform, deploy our software, and some approaches to security.
 
@@ -16,7 +18,7 @@ This post will talk about how we approach configuration management (how we defin
    19659
 ```
 
-## Why [Ansible](https://www.ansible.com/it-automation)?
+### Why [Ansible](https://www.ansible.com/it-automation)?
 
 When choosing technologies to power our infrastructure automation, we have some underlying principles that guide our decisions. First and foremost, there must (where feasible) be something resembling revision control. Second, there should be good support (community adoption, availability on different platforms, etc.) for the technology and how it may interact with other technologies being used. Third, familiarity of the tech by those who will be utilizing it most often doesn't hurt. After this, domain specific questions come into play.
 
@@ -24,7 +26,7 @@ Since Ansible is a bunch of plain text files, these are easily thrown into a git
 
 Equally important is where and how we will be running our configuration management. The underlying machines that run our software are ephemeral by design. Ansible lends itself well to this model, due to its ability to generate inventory dynamically. Since it is agentless, Ansible only requires a properly secured ssh daemon on the remote host, and it can do all its work from a centralized executor. Different tasks can be compartmentalized into different playbooks. This allows us to run everything from ad-hoc tasks to building our entire AWS infrastructure. A future post will dig further into the details of how some of this happens.
 
-## Tasks, roles, playbooks, and variables
+### Tasks, roles, playbooks, and variables
 
 The basic unit of work in Ansible is a task, using pre-packaged modules. You can create and move files, manipulate system resources, install packages and start their services, use a template engine to dynamically create files: typical systems administration stuff. A collection of tasks is combined into a role. An example role could be to install, configure, and start NTP.
 
@@ -73,7 +75,7 @@ The `loadvariables` role will ingest all the YAML files it is expecting to find.
 
 Ansible purists would tend to use something like `groupvars`. This is a little bit of technical debt that works really well for us, which makes it difficult to correct, as we regularly pull configs from different sources. We aim for the best solution at the time, and are always improving our approach to clean up issues such as this. Everything is a work in progress.
 
-## AWS CloudFormation, Jinja2, and more YAML
+### AWS CloudFormation, Jinja2, and more YAML
 
 Up until this point, the focus has very much been about setting up a system with our specifications, including all required software to be installed, configured, and running (up to and including our own code). This really becomes powerful when we can define and create the actual systems upon which all the software will run.
 
@@ -111,7 +113,7 @@ redis:
     - 'RedisCluster01'
 ```
 
-## Conclusion
+### Conclusion
 
 Our approach has some amazing benefits. We are able to define and spin up local development or staging environments as easily as production. This is a simple matter of slightly different variable definitions. We can scale just by altering some parameters - this works both for our process and the infra itself. We can bake best security practices into our CloudFormation and configuration management. Whatever we boot from our templates gains those things automatically without us having to remember to do it every time.
 
